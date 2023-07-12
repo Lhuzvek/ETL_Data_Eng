@@ -12,8 +12,6 @@ Paso 2: Descarga las imágenes de Airflow y Spark
 
 Ejecuta los siguientes comandos en la terminal para descargar las imágenes necesarias:
 
-bash
-Copy code
 docker-compose pull lucastrubiano/airflow:airflow_2_6_2
 docker-compose pull lucastrubiano/spark:spark_3_4_1
 
@@ -21,8 +19,6 @@ Paso 3: Inicia los servicios
 
 Utiliza el siguiente comando para iniciar los servicios y construir los contenedores:
 
-bash
-Copy code
 docker-compose up --build
 
 Paso 4: Accede a Airflow
@@ -54,10 +50,11 @@ En la pestaña "Admin" -> "Variables" de Airflow, crea una nueva variable con lo
 
 Key: driver_class_path
 Value: /tmp/drivers/postgresql-42.5.2.jar
+
 Crea otra nueva variable con los siguientes datos:
 
 Key: spark_scripts_dir
 Value: /opt/airflow/scripts
-Paso 7: Ejecuta el DAG
 
+Paso 7: Ejecutar el DAG
 Ejecuta el DAG llamado etl_emae para iniciar el proceso de extracción, transformación y carga de datos.
