@@ -4,28 +4,22 @@ Descarga el archivo .env.
 
 Descarga el archivo docker-compose.yml.
 
-Crea la carpeta DAG y descarga el archivo "etl_emae".
+La carpeta DAG y descarga el archivo "etl_emae".
 
-Crea la carpeta SCRIPT y descarga los archivos "commons" y "EMAE_ETL_spark"
+La carpeta SCRIPT y descarga los archivos "commons" y "EMAE_ETL_spark"
 
-Paso 2: Descarga las imágenes de Airflow y Spark
 
-Ejecuta los siguientes comandos en la terminal para descargar las imágenes necesarias:
-
-docker-compose pull lucastrubiano/airflow:airflow_2_6_2
-docker-compose pull lucastrubiano/spark:spark_3_4_1
-
-Paso 3: Inicia los servicios
+Paso 2: Inicia los servicios
 
 Utiliza el siguiente comando para iniciar los servicios y construir los contenedores:
 
 docker-compose up --build
 
-Paso 4: Accede a Airflow
+Paso 3: Accede a Airflow
 
 Una vez que los servicios estén levantados acceder a Airflow en http://localhost:8080/ desde el navegador web.
 
-Paso 5: Configura las conexiones en Airflow
+Paso 4: Configura las conexiones en Airflow
 
 En la pestaña "Admin" -> "Connections" de Airflow, crea una nueva conexión con los siguientes datos para Redshift:
 
@@ -44,7 +38,7 @@ Conn Type: Spark
 Host: spark://spark
 Port: 7077
 Extra: {"queue": "default"}
-Paso 6: Configura las variables en Airflow
+Paso 5: Configura las variables en Airflow
 
 En la pestaña "Admin" -> "Variables" de Airflow, crea una nueva variable con los siguientes datos:
 
