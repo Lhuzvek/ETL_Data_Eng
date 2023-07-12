@@ -55,12 +55,12 @@ class ETL_Spark:
         except:
             print(">>> [init] No se pudo conectar a Redshift")
 
-    def execute(self, process_date: str):
+    def execute(self, fecha_proceso: str):
         """
         Método principal que ejecuta el ETL
 
         Args:
-            process_date (str): Fecha de proceso en formato YYYY-MM-DD
+            fecha_proceso (str): Fecha de proceso en formato YYYY-MM-DD
         """
         print(">>> [execute] Ejecutando ETL...")
 

@@ -2,9 +2,11 @@
 
 from airflow import DAG
 
-from airflow.operators.python_operator import PythonOperator
+from airflow.operators.python import PythonOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 from airflow.providers.common.sql.operators.sql import SQLExecuteQueryOperator
+from airflow.models import XCom
+from airflow.models import Variable
 
 
 from airflow.models import Variable
@@ -12,7 +14,7 @@ from airflow.models import Variable
 from datetime import datetime, timedelta
 
 QUERY_CREATE_TABLE = """
-            CREATE TABLE IF NOT EXISTS schema.table_name (
+            CREATE TABLE IF NOT EXISTS emae (
                 fecha DATE,
                 valor_emae DECIMAL(16,2),
                 sector_emae VARCHAR(100),
@@ -80,7 +82,7 @@ with DAG(
 
     spark_etl_emae = SparkSubmitOperator(
         task_id="spark_etl_emae",
-        application=f'{Variable.get("spark_scripts_dir")}/etl_emae.py',
+        application=f'{Variable.get("spark_scripts_dir")}/EMAE_ETL_Spark.py',
         conn_id="spark_default",
         dag=dag,
         driver_class_path=Variable.get("driver_class_path"),

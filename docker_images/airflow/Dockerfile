@@ -24,5 +24,3 @@ RUN pip install -r /requirements.txt
 # RUN python -m pip install apache-airflow-providers-apache-spark
 # RUN python -m pip install 'apache-airflow[amazon]'
 # RUN python -m pip install apache-airflow-providers-amazon
-
-# docker build -t lucastrubiano/airflow:airflow_2_6_2 .

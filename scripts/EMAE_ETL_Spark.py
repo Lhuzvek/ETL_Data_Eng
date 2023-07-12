@@ -8,49 +8,10 @@ from requests import get
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, lit, from_unixtime, to_date, year
-from pyspark.sql.types import (
-    DateType,
-    DoubleType,
-    IntegerType,
-    StringType,
-)
 
 from commons import ETL_Spark
 
 class EMAE_ETL_Spark(ETL_Spark):
-
-    
-    def __init__(self, job_name=None):
-        super().__init__(job_name)
-        self.fecha_proceso = datetime.now().strftime("%Y-%m-%d")
-
-    def run(self):
-        fecha_proceso = "2023-07-09"  # datetime.now().strftime("%Y-%m-%d")
-        self.execute(fecha_proceso)
-
-    def extract(self):
-        """
-        Extrae datos de la API
-        """
-        print(">>> [E] Extrayendo datos de la API...")
-
-        response = requests.get("https://randomuser.me/api/?results=2")
-        if response.status_code == 200:
-            data = response.json()["results"]
-            print(data)
-        else:
-            print("Error al extraer datos de la API")
-            data = []
-            raise Exception("Error al extraer datos de la API")
-
-        df = self.spark.read.json(
-            self.spark.sparkContext.parallelize(data), multiLine=True
-        )
-        df.printSchema()
-        df.show()
-
-        return df
-        
     def __init__(self, fecha_proceso=None):
         """
         Constructor de la clase, inicializa la sesión de Spark y las variables de configuración
@@ -80,6 +41,10 @@ class EMAE_ETL_Spark(ETL_Spark):
             else date.today().strftime("%Y-%m-%d")
         )
 
+    def run(self):
+        fecha_proceso = datetime.now().strftime("%Y-%m-%d")
+        self.execute(fecha_proceso)
+
     def extract(self):
         """
         Extrae datos de la API
@@ -88,7 +53,7 @@ class EMAE_ETL_Spark(ETL_Spark):
         """
         print(f">>> [E] Extrayendo datos de la API del {self.ORIGEN_DATOS}...")
 
-        # Extraer datos de la API
+        # Extrae datos de la API
         URL_API = "https://apis.datos.gob.ar/series/api/series/?metadata=full&collapse=month&collapse_aggregation=avg&ids=11.3_CMMR_2004_M_10,11.3_VMASD_2004_M_23,11.3_VMATC_2004_M_12,11.3_VIPAA_2004_M_5&limit=5000&start=0"
         response = get(URL_API)
         response_data = response.json()
@@ -96,7 +61,7 @@ class EMAE_ETL_Spark(ETL_Spark):
         datos = response_data["data"]
         frecuencia = response_data["meta"][0]["frequency"]  # "month"
 
-        # Obtener nombre de las columnas
+        # Obtiene nombre de las columnas
         columna_0 = "fecha"
         columna_1 = response_data["meta"][1]["field"]["title"]
         columna_2 = response_data["meta"][2]["field"]["title"]
@@ -111,7 +76,7 @@ class EMAE_ETL_Spark(ETL_Spark):
             columna_4,
         ]
 
-        # Crear dataframe de Spark
+        # Crea dataframe de Spark
         df_crudo = self.spark.createDataFrame(datos, columnas)
 
         df = df_crudo.withColumn("frecuencia", lit(frecuencia))
@@ -164,8 +129,8 @@ class EMAE_ETL_Spark(ETL_Spark):
         """
         print(">>> [L] Cargando datos en Redshift...")
 
-        # add fecha_proceso column
-        df_final = df_final.withColumn("fecha_proceso", lit(self.fecha_proceso))
+        # agrega columna fecha_proceso
+        df_final = df_final.withColumn("fecha_proceso", lit(self.FECHA_PROCESO))
 
         df_final.write \
             .format("jdbc") \
